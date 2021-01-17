@@ -1,4 +1,5 @@
 import parser.BaseParser;
+import parser.ParseException;
 import parser.StringSource;
 
 public class ParseMoves extends BaseParser {
@@ -35,23 +36,36 @@ public class ParseMoves extends BaseParser {
         this.cube = cube;
     }
 
-    public void readMoves() {
+    public void apply(int axis, int place, boolean isOpposite) {
+        cube.move(axis, place);
+        if (isOpposite) {
+            cube.move(axis, place);
+            cube.move(axis, place);
+        }
+    }
+
+    public void readMoves() throws IllegalArgumentException {
         nextChar();
         while (!eof()) {
             skipWhiteSpace();
-            try {
-                int[] params = getParams(ch);
-                int axis = params[0];
-                int place = params[1];
-                cube.move(axis, place);
-                nextChar();
-                if (test('\'')) {
-                    cube.move(axis, place);
-                    cube.move(axis, place);
+            int[] params = getParams(ch);
+            nextChar();
+            int axis = params[0];
+            int place = params[1];
+            boolean isOpposite = false;
+
+            if (test('\'')) {
+                isOpposite = true;
+            }
+            apply(axis, place, isOpposite);
+            skipWhiteSpace();
+
+            StringBuilder s = new StringBuilder();
+            if (copyInteger(s)) {
+                int x = Integer.parseInt(s.toString()) - 1;
+                for (int i = 0; i < x; i++) {
+                    apply(axis, place, isOpposite);
                 }
-                skipWhiteSpace();
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
             }
         }
     }

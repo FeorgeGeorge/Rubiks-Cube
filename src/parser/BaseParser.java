@@ -50,6 +50,28 @@ public class BaseParser {
             // do nothing;
         }
     }
+
+    private void copyDigits(final StringBuilder sb) {
+        while (between('0', '9')) {
+            sb.append(ch);
+            nextChar();
+        }
+    }
+
+
+    protected boolean copyInteger(final StringBuilder sb) {
+        int x = sb.length();
+        if (test('-')) {
+            sb.append('-');
+        }
+        if (test('0')) {
+            sb.append('0');
+        } else if (between('1', '9')) {
+            copyDigits(sb);
+        }
+        return (sb.length()-x > 0);
+    }
+
     protected boolean between(final char from, final char to) {
         return from <= ch && ch <= to;
     }

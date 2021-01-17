@@ -1,7 +1,7 @@
 public class Main {
 
     public static void main(String[] args) {
-        String mainString = "D";
+        String mainString = "Dx";
         Cube myCube = new Cube();
         System.out.println(myCube);
         ParseMoves parser = new ParseMoves(myCube, mainString);
